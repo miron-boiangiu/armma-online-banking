@@ -88,7 +88,7 @@ def login():
     return error_response(error, 401)
 
 
-@bp.route("/logout", methods=["POST"])
+@bp.route("/logout", methods=["POST", "GET"])
 @jwt_required()
 def logout():
     """Marks the access token as invalid."""

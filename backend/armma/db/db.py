@@ -29,15 +29,18 @@ def close_db(e=None):
         db.close()
 
 
-@click.command("create-db")
-def create_db_command():
-    """Clear existing data and create new tables."""
-
+def create_db():
     db = get_db()
 
     with current_app.open_resource("db/schema.sql") as f:
         db.executescript(f.read().decode("utf8"))
+
+@click.command("create-db")
+def create_db_command():
+    """Clear existing data and create new tables."""
     
+    create_db()
+
     click.echo("Initialized the database.")
 
 

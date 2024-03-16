@@ -21,5 +21,6 @@ If using VSCode, make sure to [select](https://code.visualstudio.com/docs/python
 
 ### How to run tests
 
-- run `pytest`
-- run `coverage html` for test coverage info
+- cd to `backend/`
+- run `python3 -m pytest -s`
+- pray
