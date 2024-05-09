@@ -5,7 +5,8 @@ from flask import Flask
 from datetime import timedelta
 from .db import db
 from .blueprints import auth
-
+from .blueprints import accounts
+from .blueprints import transactions
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -36,5 +37,7 @@ def create_app(test_config=None):
 
     # apply the blueprints to the app
     app.register_blueprint(auth.bp)
+    app.register_blueprint(accounts.bp)
+    app.register_blueprint(transactions.bp)
 
     return app

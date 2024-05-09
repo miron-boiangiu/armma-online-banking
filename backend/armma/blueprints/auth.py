@@ -23,8 +23,8 @@ bp = Blueprint("auth", __name__)
 def register():
     """Register a new user."""
 
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.json["username"]
+    password = request.json["password"]
     db = get_db()
     error = None
 
@@ -54,8 +54,8 @@ def register():
 def login():
     """Log in a registered user by sending back a JWT token."""
 
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.json["username"]
+    password = request.json["password"]
     db = get_db()
     error = None
     user = db.execute(
@@ -158,8 +158,8 @@ def init_jwt(jwt):
     def load_logged_in_user(jwt_header, jwt_data):
         """If the caller has a valid token, enables the use of get_current_user()."""
         user_id = jwt_data["sub"]
-        return get_db().execute("SELECT * FROM user WHERE username = ?", (user_id,)
-                                ).fetchone()["username"]
+        return dict(get_db().execute("SELECT id, username, is_admin FROM user WHERE username = ?", (user_id,)
+                                ).fetchone())
     
 
     @jwt.user_identity_loader
