@@ -23,17 +23,17 @@ bp = Blueprint("auth", __name__)
 def register():
     """Register a new user."""
 
-    username = request.json["username"]
-    password = request.json["password"]
     db = get_db()
     error = None
 
-    if not username:
+    if not "username" in request.json:
         error = "Username is required."
-    elif not password:
+    elif not "password" in request.json:
         error = "Password is required."
 
     if error is None:
+        username = request.json["username"]
+        password = request.json["password"]
         try:
             db.execute(
                 "INSERT INTO user (username, password) VALUES (?, ?)",
@@ -54,18 +54,28 @@ def register():
 def login():
     """Log in a registered user by sending back a JWT token."""
 
-    username = request.json["username"]
-    password = request.json["password"]
     db = get_db()
     error = None
-    user = db.execute(
-        "SELECT * FROM user WHERE username = ?", (username,)
-    ).fetchone()
+    username = None
+    password = None
 
-    if user is None:
-        error = "Incorrect username."
-    elif not check_password_hash(user["password"], password):
-        error = "Incorrect password."
+    if "username" not in request.json:
+        error = "Missing field username."
+    elif "password" not in request.json:
+        error = "Mising field password."
+
+    if error is None:
+
+        username = request.json["username"]
+        password = request.json["password"]
+        user = db.execute(
+            "SELECT * FROM user WHERE username = ?", (username,)
+        ).fetchone()
+
+        if user is None:
+            error = "Incorrect username."
+        elif not check_password_hash(user["password"], password):
+            error = "Incorrect password."
 
     if error is None:
         access_token = create_access_token(identity=username)
@@ -102,6 +112,18 @@ def logout():
 
     return success_response()
 
+@bp.route("/account_info", methods=["POST", "GET"])
+@jwt_required()
+def account_info():
+    """Marks the access token as invalid."""
+    db = get_db()
+    current_user = get_current_user()
+
+    data = db.execute("SELECT id, username, is_admin FROM user WHERE id = ?", 
+               (current_user["id"],)
+            ).fetchone()
+
+    return success_message_response(dict(data))
 
 @bp.route("/logged_in_check")
 @jwt_required(optional=True)
@@ -149,9 +171,7 @@ def init_jwt(jwt):
         token_in_list = db.execute("SELECT (expired) FROM token WHERE jti = ?", (jti,)
                                    ).fetchone()
         
-        print (token_in_list["expired"])
-
-        return token_in_list["expired"] == 1
+        return token_in_list is not None and token_in_list["expired"] == 1
     
 
     @jwt.user_lookup_loader

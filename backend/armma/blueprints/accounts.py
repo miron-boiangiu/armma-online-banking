@@ -24,7 +24,9 @@ bp = Blueprint("accounts", __name__)
 def create_banking_account():
     """Create a new banking account."""
 
-    account_name = request.json["account_name"]
+    account_name = None
+    if "account_name" in request.json:
+        account_name = request.json["account_name"]
 
     db = get_db()
     current_user = get_current_user()
@@ -42,7 +44,62 @@ def create_banking_account():
         )
         db.commit()
     except db.IntegrityError:
-        error = f"User already has an account with this name."
+        error = f"Operation failed."
+    else:
+        return success_response()
+
+    return error_response(error, 406)
+
+@bp.route("/accounts", methods=["GET"])
+@jwt_required()
+def accounts():  # TODO: Paginate this
+    """List accounts of this user."""
+
+    db = get_db()
+    current_user = get_current_user()
+
+    error = None
+
+    try:
+        accounts = db.execute(
+            "SELECT * from banking_account where user_id=?",
+            (current_user["id"],)
+        ).fetchall()
+
+        return success_message_response([dict(x) for x in accounts])
+    except db.IntegrityError:
+        error = f"Operation failed."
+
+    return error_response(error, 400)
+
+@bp.route("/inspect_banking_account", methods=["POST"])
+@jwt_required()
+def inspect_banking_account():
+    """Inspect a banking account."""
+
+    account_id = None
+    if "account_id" in request.json:
+        account_id = request.json["account_id"]
+
+    db = get_db()
+    current_user = get_current_user()
+
+    error = None
+
+    if not account_id:
+        return error_response("Field account_id missing from request.", 400)
+
+    try:
+        res = db.execute(
+            "SELECT * from banking_account where user_id=? AND id=?",
+            (current_user["id"], account_id),
+        ).fetchone()
+
+        if res:
+            return success_message_response(dict(res))
+
+    except db.IntegrityError:
+        error = f"User doesn't own an account with this name."
     else:
         return success_response()
 
@@ -53,21 +110,22 @@ def create_banking_account():
 def close_banking_account():
     """Close a banking account."""
 
-    account_name = request.json["account_name"]
+    account_id = None
+    if "account_id" in request.json:
+        account_id = request.json["account_id"]
 
     db = get_db()
     current_user = get_current_user()
 
     error = None
 
-    if not account_name:
-        return error_response("Field account_name missing from request.", 400)
+    if not account_id:
+        return error_response("Field account_id missing from request.", 400)
 
     try:
-        
         db.execute(
-            "UPDATE banking_account SET is_closed=1 WHERE user_id=? AND account_name=?",
-            (current_user["id"], account_name),
+            "UPDATE banking_account SET is_closed=1 WHERE user_id=? AND id=?",
+            (current_user["id"], account_id),
         )
         db.commit()
     except db.IntegrityError:

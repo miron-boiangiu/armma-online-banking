@@ -21,13 +21,13 @@ CREATE TABLE token (
 );
 
 CREATE TABLE banking_account (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   account_name TEXT NOT NULL,
   user_id INTEGER NOT NULL,
   balance INTEGER DEFAULT 0,
   is_frozen INTEGER DEFAULT 0,
   is_closed INTEGER DEFAULT 0,
-  FOREIGN KEY(user_id) REFERENCES user(id),
-  PRIMARY KEY (account_name, user_id)
+  FOREIGN KEY(user_id) REFERENCES user(id)
 );
 
 CREATE TABLE bank_transaction (
@@ -36,6 +36,7 @@ CREATE TABLE bank_transaction (
   to_banking_account_id INTEGER NOT NULL,
   amount INTEGER NOT NULL,
   reason TEXT,
+  transaction_time TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(from_banking_account_id) REFERENCES banking_account(id),
   FOREIGN KEY(to_banking_account_id) REFERENCES banking_account(id)
 );
