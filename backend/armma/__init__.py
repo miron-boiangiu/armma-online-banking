@@ -1,6 +1,7 @@
 import os
 
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from flask import Flask
 from datetime import timedelta
 from .db import db
@@ -11,12 +12,15 @@ from .blueprints import transactions
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
+
     app.config.from_mapping(
         SECRET_KEY="dev",
         JWT_SECRET_KEY="dev",
         DATABASE=os.path.join(app.instance_path, "armma.sqlite"),
-        JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+        JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
     )
+
+    CORS(app)
 
     jwt = JWTManager(app)
     auth.init_jwt(jwt)
