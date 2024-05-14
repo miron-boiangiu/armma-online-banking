@@ -21,7 +21,7 @@ function Admin() {
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/dashboard") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -30,7 +30,6 @@ function Admin() {
           />
         );
       } else {
-        console.log("AAAAAAAAAAAAAAAAA")
         return null;
       }
     });

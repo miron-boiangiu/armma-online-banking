@@ -11,13 +11,13 @@ import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import AdminLayout from "./layouts/Admin.jsx";
-console.log("a ajuns aici")
+import Login from "login/Login";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Switch>
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/admin/dashboard" />
+    <Route exact path="/" render={(props) => <Login {...props} />} />
+    <Route path="/dashboard" render={(props) => <AdminLayout {...props} />} />
     </Switch>
   </BrowserRouter>
 );
-console.log("s a terminat")

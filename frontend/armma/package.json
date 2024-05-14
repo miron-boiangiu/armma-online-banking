@@ -18,7 +18,13 @@
     "react-scripts": "5.0.1",
     "reactstrap": "8.8.1",
     "sass": "1.53.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.17",
+    "live-server": "^1.2.2",
+    "mdb-react-ui-kit": "^8.0.0",
+    "react-bootstrap-validation": "^0.1.11"
   },
   "optionalDependencies": {
     "jquery": "3.5.1",

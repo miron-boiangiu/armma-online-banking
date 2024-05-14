@@ -15,6 +15,7 @@ export default function App() {
     console.log('Form data:', formValues); 
   };
   return (
+    <div className="old_body">
     <Grid container spacing={0}>
       <Grid item xs={5}>
         <Item>
@@ -70,7 +71,7 @@ export default function App() {
       
     </Grid>
     
-    
+    </div>
   );
 }
 

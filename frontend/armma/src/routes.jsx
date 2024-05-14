@@ -7,32 +7,32 @@ import Transfer from "./views/Transfer.jsx"
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
+    path: "/accounts",
     name: "My accounts",
     icon: "bi bi-coin",
     component: Dashboard,
-    layout: "/admin"
+    layout: "/dashboard"
   },
   {
     path: "/user",
     name: "Profile",
     icon: "bi bi-person-fill",
     component: UserProfile,
-    layout: "/admin"
+    layout: "/dashboard"
   },
   {
     path: "/transfer",
     name: "Transfer money",
     icon: "bi bi-arrow-left-right",
     component: Transfer,
-    layout: "/admin"
+    layout: "/dashboard"
   },
   {
     path: "/transactions",
     name: "Transactions",
     icon: "bi bi-clock-history",
     component: TableList,
-    layout: "/admin"
+    layout: "/dashboard"
   }
 ];
 
