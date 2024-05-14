@@ -1,5 +1,8 @@
 import React from "react";
 import * as Components from "../layouts/Components";
+import { API_USER_INFO_URL } from "api_routes";
+import { useState, useEffect } from "react";
+import axios from "axios";
 // import ChartistGraph from "react-chartist";
 
 // react-bootstrap components
@@ -12,6 +15,21 @@ import {
 } from "react-bootstrap";
 
 function User() {
+  const [userData, setUserData]= useState(null);
+
+  useEffect(() => {
+
+    // Get token
+    const token = localStorage.getItem("token")
+
+    console.log(token)  // TODO: Unsafe log
+
+    axios.get(API_USER_INFO_URL, { headers: {"Authorization" : `Bearer ${token}`} })
+    .then((response) => (userData === null) && setUserData(response.data.message))
+
+    console.log(userData);
+  });
+
   return (
     <>
       <Container fluid>
@@ -29,37 +47,18 @@ function User() {
                         <label>Email</label>
                         <Form.Control
                           disabled
-                          placeholder="Email"
+                          placeholder={userData && userData.username}
                           type="text"
                         ></Form.Control>
                       </Form.Group>
                     </Col>
                     <Col className="px-1" md="5">
                       <Form.Group>
-                        <label>Username</label>
+                        <label>Name</label>
                         <Form.Control
                           placeholder="Username"
                           type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="6">
-                      <Form.Group>
-                        <label>First Name</label>
-                        <Form.Control
-                          placeholder="First Name"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="6">
-                      <Form.Group>
-                        <label>Last Name</label>
-                        <Form.Control
-                          placeholder="Last Name"
-                          type="text"
+                          defaultValue={userData && userData.real_name}
                         ></Form.Control>
                       </Form.Group>
                     </Col>

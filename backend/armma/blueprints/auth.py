@@ -27,17 +27,20 @@ def register():
     error = None
 
     if not "username" in request.json:
-        error = "Username is required."
+        error = "Mail is required."
     elif not "password" in request.json:
         error = "Password is required."
+    elif not "real_name" in request.json:
+        error = "Name is required."
 
     if error is None:
         username = request.json["username"]
         password = request.json["password"]
+        real_name = request.json["real_name"]
         try:
             db.execute(
-                "INSERT INTO user (username, password) VALUES (?, ?)",
-                (username, generate_password_hash(password)),
+                "INSERT INTO user (username, password, real_name) VALUES (?, ?, ?)",
+                (username, generate_password_hash(password), real_name),
             )
             db.commit()
         except db.IntegrityError:
@@ -119,7 +122,7 @@ def account_info():
     db = get_db()
     current_user = get_current_user()
 
-    data = db.execute("SELECT id, username, is_admin FROM user WHERE id = ?", 
+    data = db.execute("SELECT id, username, is_admin, real_name FROM user WHERE id = ?", 
                (current_user["id"],)
             ).fetchone()
 

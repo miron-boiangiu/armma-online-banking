@@ -2,6 +2,8 @@ import React from "react";
 import 'chartist/dist/chartist.min.css'; 
 import * as Components from "../layouts/Components";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   Card,
@@ -13,9 +15,11 @@ import {
   Form,
   Button
 } from "react-bootstrap";
+import { API_USER_INFO_URL } from "api_routes";
 
 export default function Account() {
   const [showModal, setShowModal] = React.useState(false);
+
     return (
         <Col lg="4" sm="6">
             <Card className="card-stats">

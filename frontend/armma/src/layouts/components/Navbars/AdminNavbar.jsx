@@ -1,10 +1,13 @@
 
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import routes from "../../../routes";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 
 function Header() {
+
+  const [shouldRerender, setShouldRerender] = useState(false);
   const location = useLocation();
   const mobileSidebarToggle = (e) => {
     e.preventDefault();
@@ -26,6 +29,15 @@ function Header() {
     }
     return "Brand";
   };
+
+  if (localStorage.getItem("token") === null) {
+    return (
+      <>
+      <Redirect to="/"/>
+      </>
+    )
+  }
+
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -65,7 +77,11 @@ function Header() {
               <Nav.Link
                 className="m-0"
                 href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault()
+                  localStorage.removeItem("token");
+                  setShouldRerender(true);
+                }}
               >
                 <span className="no-icon">Log out</span>
               </Nav.Link>

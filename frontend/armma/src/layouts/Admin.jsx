@@ -47,6 +47,9 @@ function Admin() {
       element.parentNode.removeChild(element);
     }
   }, [location]);
+
+  
+
   return (
     <>
       <div className="wrapper">

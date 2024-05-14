@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS bank_transaction;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
+  real_name TEXT NOT NULL,
   password TEXT NOT NULL,
   is_admin INTEGER DEFAULT 0
 );
