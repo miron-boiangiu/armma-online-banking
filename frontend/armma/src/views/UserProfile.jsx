@@ -1,6 +1,6 @@
 import React from "react";
 import * as Components from "../layouts/Components";
-import ChartistGraph from "react-chartist";
+// import ChartistGraph from "react-chartist";
 
 // react-bootstrap components
 import {
@@ -137,7 +137,7 @@ function User() {
                 <Card.Title as="h4">Total Money</Card.Title>
               </Card.Header>
             <div className="ct-chart" id="chartHours">
-                  <ChartistGraph
+                  {/* <ChartistGraph
                     data={{
                       labels: [
                         "Jan",
@@ -185,7 +185,7 @@ function User() {
                         },
                       ],
                     ]}
-                  />
+                  /> */}
                 </div>
             </Card>
           </Col>
