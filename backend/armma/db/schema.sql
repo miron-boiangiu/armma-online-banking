@@ -28,6 +28,7 @@ CREATE TABLE banking_account (
   balance INTEGER DEFAULT 0,
   is_frozen INTEGER DEFAULT 0,
   is_closed INTEGER DEFAULT 0,
+  iban TEXT UNIQUE NOT NULL,
   FOREIGN KEY(user_id) REFERENCES user(id)
 );
 
@@ -35,6 +36,7 @@ CREATE TABLE bank_transaction (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   from_banking_account_id INTEGER NOT NULL,
   to_banking_account_id INTEGER NOT NULL,
+  external_to_iban TEXT,
   amount INTEGER NOT NULL,
   reason TEXT,
   transaction_time TEXT DEFAULT CURRENT_TIMESTAMP,

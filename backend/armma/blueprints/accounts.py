@@ -4,12 +4,15 @@ from flask import redirect
 from flask import request
 from flask import session
 from flask import url_for
+import random
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended import get_jti
 from flask_jwt_extended import jwt_required
+import string
+from flask import jsonify
 from flask_jwt_extended import get_current_user
 
 from ..db.db import get_db
@@ -36,19 +39,28 @@ def create_banking_account():
     if not account_name:
         return error_response("Field account_name missing from request.", 400)
 
+    def generate_iban():
+        country_code = "RO"
+        check_digits = f"{random.randint(10, 99)}"  # Two digits
+        bank_code = "BANK"  # Example bank code
+        account_identifier = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        return f"{country_code}{check_digits}{bank_code}{account_identifier}"
+
+    iban = generate_iban()
+
     try:
-        
         db.execute(
-            "INSERT INTO banking_account (user_id, account_name) VALUES (?, ?)",
-            (current_user["id"], account_name),
+            "INSERT INTO banking_account (user_id, account_name, iban) VALUES (?, ?, ?)",
+            (current_user["id"], account_name, iban),
         )
         db.commit()
     except db.IntegrityError:
         error = f"Operation failed."
     else:
-        return success_response()
+        return jsonify({"message": "Account created successfully", "iban": iban}), 201
 
     return error_response(error, 406)
+
 
 @bp.route("/accounts", methods=["GET"])
 @jwt_required()
@@ -62,7 +74,7 @@ def accounts():  # TODO: Paginate this
 
     try:
         accounts = db.execute(
-            "SELECT * from banking_account where user_id=?",
+            "SELECT * from banking_account where user_id=? AND is_closed=0",
             (current_user["id"],)
         ).fetchall()
 
