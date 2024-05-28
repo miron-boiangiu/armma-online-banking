@@ -11,6 +11,9 @@ CREATE TABLE user (
   username TEXT UNIQUE NOT NULL,
   real_name TEXT NOT NULL,
   password TEXT NOT NULL,
+  address TEXT DEFAULT NULL,
+  city TEXT DEFAULT NULL,
+  country TEXT DEFAULT NULL,
   is_admin INTEGER DEFAULT 0
 );
 

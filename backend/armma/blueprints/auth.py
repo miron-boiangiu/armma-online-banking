@@ -118,13 +118,15 @@ def logout():
 @bp.route("/account_info", methods=["POST", "GET"])
 @jwt_required()
 def account_info():
-    """Marks the access token as invalid."""
+    """Fetch account information."""
     db = get_db()
     current_user = get_current_user()
 
-    data = db.execute("SELECT id, username, is_admin, real_name FROM user WHERE id = ?", 
-               (current_user["id"],)
-            ).fetchone()
+    data = db.execute("""
+        SELECT id, username, is_admin, real_name, address, city, country 
+        FROM user 
+        WHERE id = ?
+    """, (current_user["id"],)).fetchone()
 
     return success_message_response(dict(data))
 
@@ -188,4 +190,47 @@ def init_jwt(jwt):
     @jwt.user_identity_loader
     def user_identity_lookup(user):
         return user
-    
+
+@bp.route("/update_profile", methods=["POST"])
+@jwt_required()
+def update_profile():
+    """Update user profile."""
+
+    db = get_db()
+    current_user = get_current_user()
+    data = request.json
+
+    real_name = data.get("real_name")
+    address = data.get("address")
+    city = data.get("city")
+    country = data.get("country")
+    new_password = data.get("new_password")
+    repeat_password = data.get("repeat_password")
+
+    if new_password and new_password != repeat_password:
+        return error_response("Passwords do not match", 400)
+
+    try:
+        db.execute(
+            """
+            UPDATE user
+            SET real_name = ?, address = ?, city = ?, country = ?
+            WHERE id = ?
+            """,
+            (real_name, address, city, country, current_user["id"]),
+        )
+
+        if new_password:
+            db.execute(
+                """
+                UPDATE user
+                SET password = ?
+                WHERE id = ?
+                """,
+                (generate_password_hash(new_password), current_user["id"]),
+            )
+
+        db.commit()
+        return success_response()
+    except db.IntegrityError:
+        return error_response("Profile update failed", 400)

@@ -69,7 +69,7 @@ function Transfer() {
     <>
       <Container fluid>
         <Row>
-          <Col md="12">
+          <Col md="8">
             <Card>
               <Card.Header></Card.Header>
               <Card.Body>

@@ -163,24 +163,31 @@ export default function Account({ account, onClose }) {
                   <Col className="pr-1" md="12">
                     <Form.Group>
                       <label>Insert money amount</label>
-                      <Form.Control
-                        placeholder="IBAN"
-                        type="text"
-                        disabled
-                      ></Form.Control>
-                      <Form.Control
-                        placeholder="CVV"
-                        type="number"
-                        disabled
-                      ></Form.Control>
-
-                      <Form.Control
-                        placeholder="Amount"
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        required
-                      ></Form.Control>
+                      <Row>
+                        <Col md="12" style={{ marginBottom: '10px' }}>
+                          <Form.Control
+                            placeholder="IBAN"
+                            type="text"
+                            disabled
+                          ></Form.Control>
+                        </Col>
+                        <Col md="4" style={{ marginBottom: '10px' }}>
+                          <Form.Control
+                            placeholder="CVV"
+                            type="number"
+                            disabled
+                          ></Form.Control>
+                        </Col>
+                        <Col md="12">
+                          <Form.Control
+                            placeholder="Amount"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            required
+                          ></Form.Control>
+                        </Col>
+                      </Row>
                     </Form.Group>
                   </Col>
                 </Row>

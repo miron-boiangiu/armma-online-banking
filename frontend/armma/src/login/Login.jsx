@@ -92,7 +92,6 @@ export default function App() {
                 <Components.Title>Sign in</Components.Title>
                 <Components.Input type="email" name="email" placeholder="Email" />
                 <Components.Input type="password" name="password" placeholder="Password" />
-                <Components.Anchor href="#">Forgot your password?</Components.Anchor>
                 <Components.Button type="submit">Sign In</Components.Button>
               </Components.Form>
             </Components.SignInContainer>
